@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-"""a script for a type-annotated function
-to_str that takes a float n as
-argument and returns the string representation of the float."""
+"""
+A script for a type-annotated function `to_str` that takes
+a float `n` as an argument and returns the string representation of the float.
+"""
 
 import math
 
-def to_str (n:float)-> str:
-	"""_summary_
+def to_str(n: float) -> str:
+    """Converts a float to its string representation.
 
-	Args:
-		n (float): float
+    Args:
+        n (float): The float to convert.
 
-	Returns:
-		str: string
-	"""
-
-	return str(n)
+    Returns:
+        str: The string representation of the float.
+    """
+    return str(n)
