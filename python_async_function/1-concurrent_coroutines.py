@@ -11,7 +11,6 @@ wait_random = __import__('0-basic_async_syntax').wait_random
 
 
 async def wait_n(n: int, max_delay: int) -> List[float]:
-    
     """return the list of all the delays (float values).
 in ascending order without using sort() because of concurrency.
     """
@@ -21,4 +20,4 @@ in ascending order without using sort() because of concurrency.
     for task in completed:
         result = await task
         sorted_tasks.append(result)
-    return sorted_tasks # list of delay of tasks sorte as completed
+    return sorted_tasks  # list of delay of tasks sorte as completed
