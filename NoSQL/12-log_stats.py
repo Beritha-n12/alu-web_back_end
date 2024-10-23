@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
-"""Log stats from collection."""
+"""Script to provide stats about Nginx logs stored in MongoDB."""
 
 from pymongo import MongoClient
 
 METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"]
 
-def log_stats(mongo_collection, option=None):
-    """Provides stats about Nginx logs stored in MongoDB."""
-    items = {}
-    if option:
-        value = mongo_collection.count_documents({"method": {"$regex": option}})
-        print(f"\tMethod {option}: {value}")
-        return
+def nginx_logs_stats(mongo_collection):
+    """Compute and display stats about Nginx logs."""
+    # Total number of logs
+    total_logs = mongo_collection.count_documents({})
+    print(f"{total_logs} logs where x is the number of documents in this collection")
 
-    result = mongo_collection.count_documents(items)
-    print(f"{result} logs")
+    # Methods count
     print("Methods:")
     for method in METHODS:
-        log_stats(mongo_collection, method)
-    status_check = mongo_collection.count_documents({"path": "/status"})
-    print(f"{status_check} status check")
+        count = mongo_collection.count_documents({"method": method})
+        print(f"\t{count} {method} requests")
+
+    # Specific method and path count
+    specific_log_count = mongo_collection.count_documents({"method": "GET", "path": "/status"})
+    print(f"1 GET /status request: {specific_log_count}")
 
 if __name__ == "__main__":
     try:
@@ -27,15 +27,8 @@ if __name__ == "__main__":
         client = MongoClient('mongodb://127.0.0.1:27017')
         nginx_collection = client.logs.nginx
 
-        # Run main log_stats function
-        log_stats(nginx_collection)
-
-        # Additional checks for document counts
-        print("\nAdditional Checks:")
-        print("Check if collection is empty:", nginx_collection.count_documents({}) == 0)
-        print("Check if collection has 1 document:", nginx_collection.count_documents({}) == 1)
-        print("Check if collection has 10 documents:", nginx_collection.count_documents({}) == 10)
-        print("Check if collection has a lot of documents (e.g., >100):", nginx_collection.count_documents({}) > 100)
+        # Display stats
+        nginx_logs_stats(nginx_collection)
 
     except Exception as e:
-        print(f"Error connecting to MongoDB or executing queries: {e}")
+        print(f"Error: {e}")
