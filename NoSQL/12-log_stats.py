@@ -9,17 +9,17 @@ def nginx_logs_stats(mongo_collection):
     """Compute and display stats about Nginx logs."""
     # Total number of logs
     total_logs = mongo_collection.count_documents({})
-    print(f"{total_logs} logs where x is the number of documents in this collection")
+    print(f"{total_logs} logs")
 
     # Methods count
     print("Methods:")
+    method_counts = {method: mongo_collection.count_documents({"method": method}) for method in METHODS}
     for method in METHODS:
-        count = mongo_collection.count_documents({"method": method})
-        print(f"\t{count} {method} requests")
+        print(f"\tmethod {method}: {method_counts[method]}")
 
     # Specific method and path count
-    specific_log_count = mongo_collection.count_documents({"method": "GET", "path": "/status"})
-    print(f"1 GET /status request: {specific_log_count}")
+    status_check = mongo_collection.count_documents({"method": "GET", "path": "/status"})
+    print(f"{status_check} status check")
 
 if __name__ == "__main__":
     try:
